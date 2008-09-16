@@ -1,0 +1,154 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+
+%\VignetteIndexEntry{PLPE Overview}
+%\VignetteKeywords{DifferentialExpression}
+%\VignetteDepends{Biobase, LPE, MASS}
+%\VignettePackage{PLPE}
+
+%documentclass[12pt, a4paper]{article}
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,pstricks}
+\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rfunarg}[1]{{\textit{#1}}}
+\newcommand{\wordl}{Paired L-statistic }
+\newcommand{\wordt}{Paired t-test }
+\newcommand{\words}{Paired {$L_w$}-statistic }
+
+
+
+\author{HyungJun Cho, and Jae K. Lee}
+\begin{document}
+\title{How to use the PLPE Package}
+
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+One of the critical demands in current proteomic research is the comparison of two or more complex samples in order to determine which proteins are differentially expressed.
+The \Rpackage{PLPE} package is designed to examine paired two groups with high-throughput data,
+such as mass spectrometry (MS) proteomic data and cDNA microarray data by using \wordt , \wordl and \words with their FDRs
+(Cho et al., 2007).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Methods}\label{PLPE}
+Suppose $x_{ij}$ and $y_{ij}$ are (a peptide¡¯s) ion intensities for two conditions $x$ and $y$, where replicates
+$i = 1, 2, \ldots, n$ and peptides (or proteins) $j = 1, 2, \ldots, m$. Note
+that prior to analysis the data may be log2-transformed in
+order to remedy the highly right-skewed distribution of protein
+intensity values
+
+\subsection{\wordt}
+Then for each protein $j$, the paired t-test statistic is:
+\begin{eqnarray}
+   t_j=\frac{d_j}{\sqrt{s^{2}_{j}/n}}
+\end{eqnarray}
+where $d_{ij} =(x_{ij}-y_{ij})$, $ d_{j}=\sum_{i} d_{ij}/n$, and $s^{2}_{j}=\sum_{i}(d_{ij}-d_{j})/(n-1)$.
+The statistical significance of each protein can then be obtained from the observed $t$-statistics
+of which the $p$-value is often adjusted for multiple comparisons. Note that the sample variance $s^{2}_{j}$ is
+derived based only on the replicated observations of peptide $j$,
+which can be considerably variable and inaccurate with a small sample size. Due to this, the paired $t$-test is often underpowered and unreliable when data is lowly replicated.
+
+\subsection{\wordl}
+In order to more reliably identify differentially expressed peptides from pair-labeled LC-MS/MS data,
+the $L$-statistic is defined as:
+\begin{eqnarray}
+   L_j=\frac{\delta_j}{\sqrt{\tau^{2}_{j}}}
+\end{eqnarray}
+where $\delta_{j}$ is the median of paired differences.
+which reduces the effect of outliers.
+Borrowing the error information of adjacent-intensity proteins, the variance ($\tau^{2}_{j}$) is estimated based on local pooled error estimates (Cho et al. 2007).
+
+\subsection{\words}
+The variance estimate for the above $L$-statistic is based solely
+on the pooled error variance of adjacent intensity proteins.
+While the LPE estimate has a shrinkage effect toward the
+mean of (local) error variances, this effect is not sensitive
+enough to capture the innate biological variability of individual
+proteins among different biological subjects. Thus, in
+order to optimize the error estimates between individual and
+LPEs, we introduce the $Lw$-statistic which uses a weighted
+variance estimate between the two variance estimates. That
+is, the $Lw$-statistic on the paired LC-MS/MS data with a
+weight, $w$, is defined as:
+\begin{eqnarray}
+   L_{wj}=\frac{\delta_j}{\sqrt{(1-w)\tau^{2}_{j} + ws^{2}_{j}/n}}
+\end{eqnarray}
+where $0 \le w \le 1$ is the weight parameter between individual
+variance estimates or pooling variance estimates.
+
+\subsection{False discovery rates (FDRs)}
+Raw $p$-values corresponding to the above $L$- or $L_w$-statistics
+can be obtained for all observed proteins if an underlying
+data distribution is assumed to be well-behaved, e.g., a Gaussian
+distribution.  We control the FDR to determine a
+threshold of $L$- or $Lw$-statistics based on a rank-invariant
+resampling technique. We estimate FDRs using the resampled null data sets, as decribed in Cho et al. (2007).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Example}
+For demonstration, we use LC-MS/MS data for platelet MPs. This data set consists of 62 peptides
+and three replicates of two different paired samples. For details, refer to the paper of Garcia et al. (2005).
+
+To run \Rpackage{PLPE}, the data can be prepared as follows.
+<<>>=
+library(PLPE)
+data(plateletSet)
+x <- exprs(plateletSet)
+x <- log2(x) #and any normalization
+
+cond <- c(1, 2, 1, 2, 1, 2)   #two different samples
+pair <- c(1, 1, 2, 2, 3, 3)   #pairing
+design <- cbind(cond, pair)
+@
+
+The above data was log-transformed with base 2, assuming to be normalized by an appropriate method.
+Two different samples and their pairing are indicated in the design matrix.
+Thus, data and design matrices (\Rfunarg{x} and \Rfunarg{design}) are the required inputs for the main function \Rfunction{lpe.paired}.
+Another useful argument is \Rfunarg{q}, which is the percentage of interval partitions for pooling peptides with similar intensities.
+The value 0.1 indicates that each interval contains 10\% of the data. The details can be found at the paper of Cho et al. (2007).
+The test statistics and false discovery rates (FDRs) can be computed by the following commands.
+<<>>=
+out <- lpe.paired(x=x, design=design, q=0.1,data.type="ms") #Compute test statistics
+
+out.fdr <- lpe.paired.fdr(x, obj=out) #Compute FDRs
+
+out$test.out[1:10,]
+
+out.fdr$FDR[1:10,]
+
+@
+The output from \Rfunction{lpe.paired} contains MA tranformed data and several test statistics, including their variance estimates and naive $p$-values.
+The $Lw$ statistics are computed by the weighted average of the variance estimates for the $L$- and $t$-tests (Cho et al. 2007).
+The default for the weight is 0.5, which can adjusted by a user.
+The output from \Rfunction{lpe.paired.fdr} contains FDRs for the $L$- and $Lw$-test, including their test statistics.
+Choosing a small FDR value, we can determine a corresponding cutoff value of the statistics.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{.5in}
+{\large \bf Reference}
+\begin{itemize}
+
+\item[] Cho H, Smalley DM, Ross MM, Theodorescu D, Ley K and Lee JK (2007).  Statistical Identification of Differentially Labelled Peptides from Liquid Chromatography Tandem Mass Spectrometry, Proteomics, 7:3681-3692.
+
+\item[] Garcia BA, Smalley DM, Cho H, Shabanowitz J, Ley K and Hunt DF (2005). The Platelet Microparticle Proteome, Journal of Proteome Research, 4:1516-1521.
+
+\end{itemize}
+\end{document}

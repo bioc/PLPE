@@ -1,0 +1,16 @@
+'summary.lpe.paired.fdr' <- function(object, ...)
+{
+    cat("\n FDR for PLPE \n")
+    cat("\n data type :", format(object$data.type))
+    cat("\n specification for the estimator :", format(object$estimator))
+    cat("\n quantile for intercals of intensities :", object$q)
+    cat("\n weight parameter :", object$w)
+    cat("\n estimate the weight :", object$w.estimator)
+    cat("\n estimated proportion of non-null peptides :", object$pi0)
+    cat("\n number of iteration :", object$n.iter)
+    cat("\n numeric vector of probabilities with values in [0,1] :", object$lambda)
+    cat("\n \n matrix for test results including FDRs \n")
+    print(head(object$FDR))
+    cat(ifelse(dim(object$FDR)[1] > 6, "...", ""), "\n")
+    invisible(object)
+}

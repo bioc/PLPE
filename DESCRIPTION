@@ -1,0 +1,14 @@
+Package: PLPE
+Version: 1.0-1
+Date: 2008-09-02
+Title: Local Pooled Error Test for Differential Expression with Paired High-throughput Data
+Author: HyungJun Cho <hj4cho@korea.ac.kr> and
+            Jae K. Lee <jaeklee@virginia.edu>
+Maintainer: Soo-heang Eo <hanansh@korea.ac.kr>
+Depends: R (>= 2.6.2), Biobase, LPE, MASS, methods
+Description: This package performs tests for paired high-throughput data.
+biocViews: Proteomics, Microarray, DifferentialExpression
+LazyLoad: yes
+LazyData: yes
+License: GPL (>=2)
+URL:http://www.korea.ac.kr/~stat2242/

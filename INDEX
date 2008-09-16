@@ -1,0 +1,12 @@
+am.trans.paired          AM transformation for Paired Data
+generate.null            generate NULL
+base.error.paired        base error for Paired Data
+lpe.paired               Local Pooled Error Test for Paired Data
+lpe.paired.default       Local Pooled Error Test for Paired Data
+print.lpe.paired         print the object created from lpe.paired
+print.lpe.paired.fdr     print the object created from lpe.paired.fdr
+summary.lpe.paired       summarize the object created from lpe.paired
+summary.lpe.paired.fdr   summarize the object created from lpe.paired.fdr
+lpe.pairedFDR            FDR for PLPE
+lpe.pairedFDR.default    FDR for PLPE
+plateletSet              LCMS proteomic data for platelte MPs

@@ -1,0 +1,25 @@
+import(Biobase)
+import(MASS)
+import(methods)
+
+export(lpe.paired,
+       lpe.paired.default,
+       lpe.paired.fdr,
+       lpe.paired.fdr.default,
+       print.lpe.paired,
+       summary.lpe.paired,
+       print.lpe.paired.fdr,
+       summary.lpe.paired.fdr,
+       am.trans.paired,
+       base.error.paired,
+       generate.null)
+
+
+S3method(lpe.paired, default)
+S3method(lpe.paired.fdr, default)
+
+S3method(summary, lpe.paired)
+S3method(summary, lpe.paired.fdr)
+
+S3method(print, lpe.paired)
+S3method(print, lpe.paired.fdr)
