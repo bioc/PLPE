@@ -10,7 +10,7 @@ This prints lpe.paired.fdr
 
 \arguments{
    \item{x}{an object created from  lpe.paired}
-   \item{...} {other arguments}
+   \item{...}{other arguments}
 }
 
 \references{

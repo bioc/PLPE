@@ -10,7 +10,7 @@ This summarize lpe.paired.
 
 \arguments{
    \item{x}{an object created from  lpe.paired}
-   \item{...} {other arguments}
+   \item{...}{other arguments}
 }
 
 
