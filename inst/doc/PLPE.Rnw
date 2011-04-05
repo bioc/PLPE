@@ -1,8 +1,9 @@
+
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
 
 %\VignetteIndexEntry{PLPE Overview}
 %\VignetteKeywords{DifferentialExpression}
-%\VignetteDepends{Biobase, LPE, MASS}
+%\VignetteDepends{Biobase, LPE, MASg}
 %\VignettePackage{PLPE}
 
 %documentclass[12pt, a4paper]{article}
@@ -47,7 +48,7 @@ such as mass spectrometry (MS) proteomic data and cDNA microarray data by using 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Methods}\label{PLPE}
-Suppose $x_{ij}$ and $y_{ij}$ are (a peptide¡¯s) ion intensities for two conditions $x$ and $y$, where replicates
+Suppose $x_{ij}$ and $y_{ij}$ are (a peptide) ion intensities for two conditions $x$ and $y$, where replicates
 $i = 1, 2, \ldots, n$ and peptides (or proteins) $j = 1, 2, \ldots, m$. Note
 that prior to analysis the data may be log2-transformed in
 order to remedy the highly right-skewed distribution of protein
