@@ -3,7 +3,7 @@
 
 %\VignetteIndexEntry{PLPE Overview}
 %\VignetteKeywords{DifferentialExpression}
-%\VignetteDepends{Biobase, LPE, MASg}
+%\VignetteDepends{Biobase, LPE, MASS}
 %\VignettePackage{PLPE}
 
 %documentclass[12pt, a4paper]{article}
